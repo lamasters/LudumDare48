@@ -33,3 +33,12 @@ canvas {
     top: 855px;
     font-family: 'Poppins', sans-serif;
 }
+
+#speak {
+    position: absolute;
+    width: 200px;
+    left: calc(50% - 640px);
+    top: 855px;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+}

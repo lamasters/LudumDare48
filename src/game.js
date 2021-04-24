@@ -51,6 +51,10 @@ function create() {
 
     console.log(poemPrompt);
     console.log(poem);
+    let utter = new SpeechSynthesisUtterance(poem);
+    let synth = window.speechSynthesis;
+    let speak = document.getElementById('speak');
+    speak.onclick = (() => {synth.speak(utter)});
 
     calculateScore(promptScore, poemPrompt);
     calculateScore(compScore, poem);
@@ -68,7 +72,7 @@ function generateAdjectives(num) {
     for(let i = 0; i < num; i++) {
         adjIdx = Math.round(Math.random() * adjectives.length);
         adj = adjectives[adjIdx];
-        sentence = sentence + adj + ' ';
+        sentence = sentence + adj + (i == num - 1 ? ' ' : ', ');
     }
 
     if (vowels.includes(sentence[0])) {
