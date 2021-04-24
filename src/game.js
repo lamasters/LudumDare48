@@ -24,18 +24,15 @@ var vowels = "aeiou";
 var state = 0;
 var promptScore = {
     score: 0,
-    negativeRatio: 0,
-    positiveRatio: 0
+    ratio: 0
 }
 var userScore = {
     score: 0,
-    negativeRatio: 0,
-    positiveRatio: 0
+    ratio: 0
 }
 var compScore = {
     score: 0,
-    negativeRatio: 0,
-    positiveRatio: 0
+    ratio: 0
 }
 
 function preload() {}
@@ -48,8 +45,17 @@ function create() {
     - Judgement state             ^
     - Death State OR Win State ->
     */
-    console.log(generatePoem());
-    console.log(generatePrompt());
+
+    let poem = generatePoem();
+    let poemPrompt = generatePrompt();
+
+    console.log(poemPrompt);
+    console.log(poem);
+
+    calculateScore(promptScore, poemPrompt);
+    calculateScore(compScore, poem);
+
+    console.log(compareScore(promptScore, compScore));
 }
 
 function update() {}
@@ -101,4 +107,25 @@ function generatePrompt() {
     sentence = sentence + noun + '.';
 
     return sentence;
+}
+
+function calculateScore(scoreObj, sentence) {
+    let analysis = sentiment.analyze(sentence);
+    scoreObj.score = analysis.score;
+
+    console.log(analysis);
+
+    let numPos = analysis.positive.length;
+    let numNeg = analysis.negative.length;
+    scoreObj.ratio = numPos / Math.max(1, numNeg);
+}
+
+function compareScore(score1, score2)  {
+    let points = 100;
+    console.log(score1.score - score2.score);
+    console.log(score1.ratio - score2.ratio);
+    points -= Math.abs(score1.score - score2.score) * 10;
+    points -= Math.abs(score1.ratio - score2.ratio) * 10;
+
+    return points;
 }
