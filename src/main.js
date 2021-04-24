@@ -267,7 +267,7 @@ function generatePoem() {
 
 function generatePrompt() {
     let sentence = "Good morrow friends. I am lonely here in my castle and thus I am look for a" + generateAdjectives(3);
-    
+
     nounIdx = Math.round(Math.random() * nouns.length);
     noun = nouns[nounIdx];
     sentence = sentence + noun + '.';
