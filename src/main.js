@@ -224,6 +224,9 @@ var compScore = {
     ratio: 0
 }
 
+var totalPoints = 0;
+var scoreText;
+
 var poem;
 var compPoem;
 var poemPrompt;
@@ -253,22 +256,26 @@ function create() {
     - Death State OR Win State ->
     */
 
-    promptText = this.add.text(32, 32, '', {font: '15px Helvetica', fill: "#ffffff"});
-    poemText = this.add.text(32, 64, '', {font: '15px Helvetica', fill: '#ffffff'});
+    promptText = this.add.text(32, 32, '', {font: '16px Helvetica', fill: "#ffffff"});
+    poemText = this.add.text(32, 64, '', {font: '16px Helvetica', fill: '#ffffff'});
+    scoreText = this.add.text(3, 690, '', {font: '18px Helvetica', fill: '#ffffff'})
 }
 
 function update() {
+    scoreText.text = "Score: " + String(totalPoints);
     if (state == 0) {
         if (!stateLoaded) loadPromptState();
         promptState();
     } else if (state == 1) {
-        if(!stateLoaded) loadWriteState();
+        if (!stateLoaded) loadWriteState();
     } else if (state == 2) {
-        if(!stateLoaded) loadCompState();
+        if (!stateLoaded) loadCompState();
         compState();
-    } else if(state == 3) {
-        if(!stateLoaded) loadReadState();
+    } else if (state == 3) {
+        if (!stateLoaded) loadReadState();
         readState();
+    } else if (state == 4) {
+        scoreState();
     }
 }
 
@@ -326,8 +333,6 @@ function calculateScore(scoreObj, sentence) {
     let analysis = sentiment.analyze(sentence);
     scoreObj.score = analysis.score;
 
-    console.log(analysis);
-
     let numPos = analysis.positive.length;
     let numNeg = analysis.negative.length;
     scoreObj.ratio = numPos / Math.max(1, numNeg);
@@ -354,6 +359,8 @@ function drawPoem(poem) {
 
 function loadPromptState() {
     poemPrompt = generatePrompt();
+    poemText.text = "";
+    promptText.text = "";
     stateLoaded = true;
 }
 
@@ -373,7 +380,6 @@ function getPoem() {
         document.body.removeChild(textInput);
         document.body.removeChild(submit);
         
-        calculateScore(userScore, poem);
         state = 2;
         stateLoaded = false;
     }
@@ -421,15 +427,48 @@ function compState() {
     }
 }
 
+function readDone() {
+    document.body.removeChild(next);
+    state = 4;
+    stateLoaded = false;
+}
+
 function loadReadState() {
     poemIndex = 0;
     poemText.text = "";
+    loadedNext = false;
     stateLoaded = true;
 }
 
 function readState() {
     if (poemIndex < poem.length) {
         drawPoem(poem);
+    } else if (!loadedNext) {
+        next = document.createElement('button');
+        next.id = "next";
+        next.innerText = "next";
+        next.onclick = readDone;
+
+        document.body.appendChild(next);
+        loadedNext = true;
+    }
+}
+
+function scoreState() {
+    calculateScore(userScore, poem);
+    calculateScore(compScore, compPoem);
+    calculateScore(promptScore, poemPrompt);
+
+    let userPoints = compareScore(userScore, promptScore);
+    let compPoints = compareScore(compScore, promptScore);
+
+    if (userPoints > compPoints) {
+        console.log("USER WON")
+        totalPoints += userPoints;
+        state = 0;
+    } else {
+        console.log("COMP WON")
+        state = 0;
     }
 }
 },{"sentiment":8}],3:[function(require,module,exports){
