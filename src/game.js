@@ -1,3 +1,6 @@
+var Sentiment = require('sentiment');
+var sentiment = new Sentiment();
+
 var config = {
     type: Phaser.WEBGL,
     width: 1280,
@@ -20,6 +23,8 @@ var game = new Phaser.Game(config);
 
 function preload() {}
 
-function create() {}
+function create() {
+    console.log(sentiment.analyze('cats are stupid.'));
+}
 
 function update() {}
