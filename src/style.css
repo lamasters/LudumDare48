@@ -34,11 +34,20 @@ canvas {
     font-family: 'Poppins', sans-serif;
 }
 
-#speak {
+#poem-area {
     position: absolute;
+    z-index: 0;
     width: 200px;
-    left: calc(50% - 640px);
-    top: 855px;
-    font-family: 'Poppins', sans-serif;
-    color: #fff;
+    height: 100px;
+    left: calc(50% - 100px);
+    top: calc(50% - 50px);
+}
+
+#poem-submit {
+    position: absolute;
+    z-index: 0;
+    width: 56px;
+    height: 25px;
+    left: calc(50% + 50px);
+    top: calc(50% + 57px);
 }

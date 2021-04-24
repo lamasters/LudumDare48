@@ -208,7 +208,9 @@ var config = {
 
 var game = new Phaser.Game(config);
 var vowels = "aeiou";
+
 var state = 0;
+
 var promptScore = {
     score: 0,
     ratio: 0
@@ -222,26 +224,41 @@ var compScore = {
     ratio: 0
 }
 
-function preload() {}
+var poem;
+var compPoem;
+var poemPrompt;
+
+var promptText;
+var poemText;
+var promptIndex = 0;
+var poemIndex = 0;
+
+var stateLoaded = false;
+
+var textInput;
+var submit;
+
+function preload() {
+}
 
 function create() {
     /* States
     - Prompt state             <-
     - Writing State               ^
     - Competitor state            ^
+    - Reading state               ^
     - Judgement state             ^
     - Death State OR Win State ->
     */
 
-    let poem = generatePoem();
-    let poemPrompt = generatePrompt();
+    promptText = this.add.text(32, 32, '', {font: '15px Helvetica', fill: "#ffffff"});
+    poemText = this.add.text(32, 64, '', {font: '15px Helvetica', fill: '#ffffff'});
+
+    poem = generatePoem();
+    poemPrompt = generatePrompt();
 
     console.log(poemPrompt);
     console.log(poem);
-    let utter = new SpeechSynthesisUtterance(poem);
-    let synth = window.speechSynthesis;
-    let speak = document.getElementById('speak');
-    speak.onclick = (() => {synth.speak(utter)});
 
     calculateScore(promptScore, poemPrompt);
     calculateScore(compScore, poem);
@@ -249,7 +266,17 @@ function create() {
     console.log(compareScore(promptScore, compScore));
 }
 
-function update() {}
+function update() {
+    if (state == 0) {
+        if (!stateLoaded) loadPromptState();
+        promptState();
+    } else if (state == 1) {
+        if(!stateLoaded) loadWriteState();
+    } else if (state == 2) {
+        if(!stateLoaded) loadCompState();
+        compState();
+    }
+}
 
 function generateAdjectives(num) {
     let sentence = '';
@@ -319,6 +346,69 @@ function compareScore(score1, score2)  {
     points -= Math.abs(score1.ratio - score2.ratio) * 10;
 
     return points;
+}
+
+function drawPrompt() {
+    promptText.text = promptText.text.concat(poemPrompt[promptIndex]);
+    promptIndex++;
+}
+
+function drawPoem(poem) {
+    poemText.text = poemText.text.concat(poem[poemIndex]);
+    poemIndex++;
+}
+
+function loadPromptState() {
+    poemPrompt = generatePrompt();
+    stateLoaded = true;
+}
+
+function promptState() {
+    if (promptIndex < poemPrompt.length) {
+        drawPrompt();
+    } else {
+        promptIndex = 0;
+        stateLoaded = false;
+        state = 1;
+    }
+}
+
+function getPoem() {
+    poem = textInput.value;
+    if (poem.length > 0) {
+        document.body.removeChild(textInput);
+        document.body.removeChild(submit);
+        
+        calculateScore(userScore, poem);
+        state = 2;
+        stateLoaded = false;
+    }
+}
+
+function loadWriteState() {
+    textInput = document.createElement('textarea');
+    textInput.id = "poem-area";
+    textInput.value = "";
+    
+    submit = document.createElement('button');
+    submit.id = "poem-submit";
+    submit.innerText = "submit";
+    submit.onclick = getPoem;
+
+    document.body.appendChild(textInput);
+    document.body.appendChild(submit);
+    stateLoaded = true;
+}
+
+function loadCompState() {
+    compPoem = generatePoem();
+    stateLoaded = true;
+}
+
+function compState() {
+    if (poemIndex < compPoem.length) {
+        drawPoem(compPoem);
+    }
 }
 },{"sentiment":8}],3:[function(require,module,exports){
 module.exports={
