@@ -242,6 +242,7 @@ var textInput;
 var submit;
 var loadedNext = false;
 var next;
+var done;
 
 function preload() {
 }
@@ -258,11 +259,11 @@ function create() {
 
     promptText = this.add.text(32, 32, '', {font: '16px Helvetica', fill: "#ffffff"});
     poemText = this.add.text(32, 64, '', {font: '16px Helvetica', fill: '#ffffff'});
-    scoreText = this.add.text(3, 690, '', {font: '18px Helvetica', fill: '#ffffff'})
+    scoreText = this.add.text(3, 685, '', {font: '24px Helvetica', fill: '#ffffff'})
 }
 
 function update() {
-    scoreText.text = "Score: " + String(totalPoints);
+    scoreText.text = "Score: " + String(Math.round(totalPoints));
     if (state == 0) {
         if (!stateLoaded) loadPromptState();
         promptState();
@@ -276,6 +277,10 @@ function update() {
         readState();
     } else if (state == 4) {
         scoreState();
+    } else if (state == 5) {
+        if (!stateLoaded) loadLoseState();
+    } else if (state == 6) {
+        if (!stateLoaded) loadWinState();
     }
 }
 
@@ -353,6 +358,9 @@ function drawPoem(poem) {
 }
 
 function loadPromptState() {
+    scoreText.x = 10;
+    scoreText.y = 685;
+    scoreText.setFontSize(24);
     poemPrompt = generatePrompt();
     poemText.text = "";
     promptText.text = "";
@@ -372,7 +380,7 @@ function promptState() {
 function getPoem() {
     poem = textInput.value;
     if (poem.length > 0) {
-        document.body.removeChild(textInput1);
+        document.body.removeChild(textInput);
         document.body.removeChild(submit);
         
         state = 2;
@@ -460,11 +468,50 @@ function scoreState() {
     if (userPoints > compPoints) {
         console.log("USER WON")
         totalPoints += userPoints;
-        state = 0;
+        state = 6;
     } else {
         console.log("COMP WON")
-        state = 0;
+        state = 5;
+        stateLoaded = false;
     }
+}
+
+function restart() {
+    state = 0;
+    stateLoaded = false;
+
+    document.body.removeChild(done);
+}
+
+function loadLoseState() {
+    scoreText.x = 550;
+    scoreText.y = 330;
+    scoreText.setFontSize(50);
+
+    done = document.createElement('button');
+    done.id = "retry";
+    done.innerText = "retry";
+    done.onclick = restart;
+
+    document.body.appendChild(done);
+
+    stateLoaded = true;
+}
+
+function nextRound() {
+    state = 0;
+    stateLoaded = false;
+    document.body.removeChild(next);
+}
+
+function loadWinState() {
+    next = document.createElement('button');
+    next.id = "retry";
+    next.innerText = "next";
+    next.onclick = nextRound;
+
+    document.body.appendChild(next);
+    stateLoaded = true;
 }
 },{"sentiment":8}],3:[function(require,module,exports){
 module.exports={
