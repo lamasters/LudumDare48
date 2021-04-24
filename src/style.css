@@ -38,7 +38,7 @@ canvas {
     position: absolute;
     z-index: 0;
     width: 200px;
-    height: 100px;
+    height: 25px;
     left: calc(50% - 100px);
     top: calc(50% - 50px);
 }

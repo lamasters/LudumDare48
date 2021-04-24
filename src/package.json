@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "rhyme-detector": "^1.1.1",
     "sentiment": "^5.0.2"
   }
 }

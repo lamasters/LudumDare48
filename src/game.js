@@ -98,7 +98,7 @@ function generateAdjectives(num) {
     let adjIdx;
     let adj;
     for(let i = 0; i < num; i++) {
-        adjIdx = Math.round(Math.random() * adjectives.length);
+        adjIdx = Math.round(Math.random() * (adjectives.length - 1));
         adj = adjectives[adjIdx];
         sentence = sentence + adj + (i == num - 1 ? ' ' : ', ');
     }
@@ -112,31 +112,27 @@ function generateAdjectives(num) {
 }
 
 function generatePoem() {
-    let sentence = "I am but a" + generateAdjectives(3);
+    let sentence = "I am a" + generateAdjectives(3);
     
-    let nounIdx = Math.round(Math.random() * nouns.length);
+    let nounIdx = Math.round(Math.random() * (nouns.length - 1));
     let noun = nouns[nounIdx];
 
-    sentence = sentence + noun + " and you, princess are a" + generateAdjectives(3);
-    
-    nounIdx = Math.round(Math.random() * nouns.length);
-    noun = nouns[nounIdx];
+    sentence = sentence + noun + ". We will be a" + generateAdjectives(2);
 
-    sentence = sentence + noun + ". Together we will become a" + generateAdjectives(3);
-
-    nounIdx = Math.round(Math.random() * nouns.length);
-    noun = nouns[nounIdx];
+    rhymesIdx = Math.round(Math.random() * (rhymes[nounIdx].length - 1));
+    noun = rhymes[nounIdx][rhymesIdx];
     sentence = sentence + noun + '.';
 
     return sentence;
 }
 
 function generatePrompt() {
-    let sentence = "Good morrow friends. I am lonely here in my castle but I want to have a" + 
-    generateAdjectives(3) + "life. Thus I am looking for a" + generateAdjectives(3);
-
-    nounIdx = Math.round(Math.random() * nouns.length);
-    noun = nouns[nounIdx];
+    let sentence = "I want a" + 
+    generateAdjectives(3) + "life. Thus I seek a" + generateAdjectives(3);
+    nounIdx = Math.round(Math.random() * (rhymes[227].length - 1));
+    console.log(nounIdx);
+    console.log(rhymes[227]);
+    noun = rhymes[227][nounIdx];
     sentence = sentence + noun + '.';
 
     return sentence;
@@ -199,7 +195,7 @@ function getPoem() {
 }
 
 function loadWriteState() {
-    textInput = document.createElement('textarea');
+    textInput = document.createElement('input');
     textInput.id = "poem-area";
     textInput.value = "";
     
