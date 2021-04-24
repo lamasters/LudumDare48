@@ -26,6 +26,13 @@ var state = 0;
 function preload() {}
 
 function create() {
+    /* States
+    - Prompt state             <-
+    - Writing State               ^
+    - Competitor state            ^
+    - Judgement state             ^
+    - Death State OR Win State ->
+    */
     console.log(generatePoem());
     console.log(generatePrompt());
 }
