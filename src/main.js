@@ -287,7 +287,7 @@ function generatePoem() {
 }
 
 function generatePrompt() {
-    let sentence = "Good morrow friends. I am lonely here in my castle and thus I am look for a" + generateAdjectives(3);
+    let sentence = "Good morrow friends. I am lonely here in my castle and thus I am looking for a" + generateAdjectives(3);
 
     nounIdx = Math.round(Math.random() * nouns.length);
     noun = nouns[nounIdx];
@@ -309,8 +309,7 @@ function calculateScore(scoreObj, sentence) {
 
 function compareScore(score1, score2)  {
     let points = 100;
-    console.log(score1.score - score2.score);
-    console.log(score1.ratio - score2.ratio);
+
     points -= Math.abs(score1.score - score2.score) * 10;
     points -= Math.abs(score1.ratio - score2.ratio) * 10;
 
