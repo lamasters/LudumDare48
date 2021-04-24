@@ -3,8 +3,8 @@ var sentiment = new Sentiment();
 
 var config = {
     type: Phaser.WEBGL,
-    width: 1100,
-    height: 520,
+    width: 1280,
+    height: 720,
     physics: {
         default: 'arcade',
         arcade: {
