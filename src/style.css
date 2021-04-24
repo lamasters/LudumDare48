@@ -1,0 +1,35 @@
+body {
+    background-color: #111122;
+}
+
+canvas {
+    position: absolute;
+    margin: auto;
+    left: calc(50% - 640px);
+    top: 100px;
+}
+
+#title {
+    text-align: center;
+    color: #fff;
+    font-family: 'Original Surfer', cursive;
+}
+
+#inst-header {
+    position: absolute;
+    width: 99vw;
+    text-align: center;
+    color: #fff;
+    top: 820px;
+    font-family: 'Poppins', sans-serif;
+}
+
+#instructions {
+    position: absolute;
+    width: 800px;
+    left: calc(50% - 400px);
+    text-align: center;
+    color: #fff;
+    top: 855px;
+    font-family: 'Poppins', sans-serif;
+}
