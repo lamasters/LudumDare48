@@ -24,7 +24,8 @@ var game = new Phaser.Game(config);
 function preload() {}
 
 function create() {
-    console.log(sentiment.analyze('cats are stupid.'));
+    console.log(sentiment.analyze('.'));
+    console.log(adjectives);
 }
 
 function update() {}
