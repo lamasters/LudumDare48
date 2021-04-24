@@ -50,6 +50,8 @@ var stateLoaded = false;
 
 var textInput;
 var submit;
+var loadedNext = false;
+var next;
 
 function preload() {
 }
@@ -66,17 +68,6 @@ function create() {
 
     promptText = this.add.text(32, 32, '', {font: '15px Helvetica', fill: "#ffffff"});
     poemText = this.add.text(32, 64, '', {font: '15px Helvetica', fill: '#ffffff'});
-
-    poem = generatePoem();
-    poemPrompt = generatePrompt();
-
-    console.log(poemPrompt);
-    console.log(poem);
-
-    calculateScore(promptScore, poemPrompt);
-    calculateScore(compScore, poem);
-
-    console.log(compareScore(promptScore, compScore));
 }
 
 function update() {
@@ -88,6 +79,9 @@ function update() {
     } else if (state == 2) {
         if(!stateLoaded) loadCompState();
         compState();
+    } else if(state == 3) {
+        if(!stateLoaded) loadReadState();
+        readState();
     }
 }
 
@@ -213,13 +207,41 @@ function loadWriteState() {
     stateLoaded = true;
 }
 
+function compDone() {
+    document.body.removeChild(next);
+    state = 3;
+    stateLoaded = false;
+}
+
 function loadCompState() {
     compPoem = generatePoem();
+    poemIndex = 0;
     stateLoaded = true;
+    loadedNext = false;
 }
 
 function compState() {
     if (poemIndex < compPoem.length) {
         drawPoem(compPoem);
+    } else if (!loadedNext) {
+        next = document.createElement('button');
+        next.id = "next";
+        next.innerText = "next";
+        next.onclick = compDone;
+
+        document.body.appendChild(next);
+        loadedNext = true;
+    }
+}
+
+function loadReadState() {
+    poemIndex = 0;
+    poemText.text = "";
+    stateLoaded = true;
+}
+
+function readState() {
+    if (poemIndex < poem.length) {
+        drawPoem(poem);
     }
 }

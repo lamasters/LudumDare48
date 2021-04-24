@@ -51,3 +51,12 @@ canvas {
     left: calc(50% + 50px);
     top: calc(50% + 57px);
 }
+
+#next {
+    position: absolute;
+    z-index: 0;
+    width: 50px;
+    height: 25px;
+    left: calc(50% + 575px);
+    top: calc(50% + 295px);
+}
