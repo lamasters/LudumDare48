@@ -130,8 +130,7 @@ function generatePrompt() {
     let sentence = "I want a" + 
     generateAdjectives(3) + "life. Thus I seek a" + generateAdjectives(3);
     nounIdx = Math.round(Math.random() * (rhymes[227].length - 1));
-    console.log(nounIdx);
-    console.log(rhymes[227]);
+
     noun = rhymes[227][nounIdx];
     sentence = sentence + noun + '.';
 
@@ -186,7 +185,7 @@ function promptState() {
 function getPoem() {
     poem = textInput.value;
     if (poem.length > 0) {
-        document.body.removeChild(textInput);
+        document.body.removeChild(textInput1);
         document.body.removeChild(submit);
         
         state = 2;

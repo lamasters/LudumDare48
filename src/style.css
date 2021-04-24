@@ -37,9 +37,9 @@ canvas {
 #poem-area {
     position: absolute;
     z-index: 0;
-    width: 200px;
+    width: 720px;
     height: 25px;
-    left: calc(50% - 100px);
+    left: calc(50% - 360px);
     top: calc(50% - 50px);
 }
 
@@ -48,8 +48,8 @@ canvas {
     z-index: 0;
     width: 56px;
     height: 25px;
-    left: calc(50% + 50px);
-    top: calc(50% + 57px);
+    left: calc(50% - 360px);
+    top: 50%;
 }
 
 #next {
