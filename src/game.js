@@ -26,6 +26,7 @@ function preload() {}
 function create() {
     console.log(sentiment.analyze('.'));
     console.log(adjectives);
+    console.log(nouns);
 }
 
 function update() {}
