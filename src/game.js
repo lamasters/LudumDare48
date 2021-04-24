@@ -22,6 +22,21 @@ var config = {
 var game = new Phaser.Game(config);
 var vowels = "aeiou";
 var state = 0;
+var promptScore = {
+    score: 0,
+    negativeRatio: 0,
+    positiveRatio: 0
+}
+var userScore = {
+    score: 0,
+    negativeRatio: 0,
+    positiveRatio: 0
+}
+var compScore = {
+    score: 0,
+    negativeRatio: 0,
+    positiveRatio: 0
+}
 
 function preload() {}
 
