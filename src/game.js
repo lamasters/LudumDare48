@@ -41,6 +41,7 @@ var totalPoints = 0;
 var scoreText;
 
 var poem;
+var dispPoem;
 var compPoem;
 var poemPrompt;
 
@@ -77,7 +78,8 @@ var lose_sfx;
 var high_blip;
 var low_blip;
 
-var difficulty;
+var difficulty = 1;
+var round = 1;
 var started = false;
 
 function preload() {
@@ -273,6 +275,7 @@ function generatePrompt() {
 
 function calculateScore(scoreObj, sentence) {
     let analysis = sentiment.analyze(sentence);
+    console.log(analysis);
     scoreObj.score = analysis.score;
 
     let numPos = analysis.positive.length;
@@ -349,17 +352,18 @@ function promptState() {
 
 function getPoem() {
     poem = textInput.value;
-    if (poem.length > 0) {
+    dispPoem = textInput.value;
+    if (dispPoem.length > 0) {
         document.body.removeChild(textInput);
         document.body.removeChild(submit);
         document.body.removeChild(poemTitle);
 
         for (let i = 1; i <= 5; i++) {
-            if (poem.length > i * 40) {
-                if (poem [i * 40 - 1] == ' ') {
-                    poem = poem.substr(0, i * 40) + '\n' + poem.substr(i * 40);
+            if (dispPoem.length > i * 40) {
+                if (dispPoem [i * 40 - 1] == ' ') {
+                    dispPoem = dispPoem.substr(0, i * 40) + '\n' + dispPoem.substr(i * 40);
                 } else {
-                    poem = poem.substr(0, i * 40) + '-\n' + poem.substr(i * 40);
+                    dispPoem = dispPoem.substr(0, i * 40) + '-\n' + dispPoem.substr(i * 40);
                 }
             }
         }
@@ -396,7 +400,25 @@ function compDone() {
 }
 
 function loadCompState() {
-    compPoem = generatePoem();
+    let compPoems = [];
+    console.log("Difficulty:", difficulty);
+
+    let best = 0;
+    let bestScore = 0;
+    for (let i = 0; i < difficulty; i++) {
+        compPoems.push(generatePoem());
+        
+        calculateScore(compScore, compPoems[i]);
+        calculateScore(promptScore, poemPrompt);
+        if (compareScore(compScore, promptScore) > bestScore) {
+            best = i;
+            bestScore = compareScore(compScore, promptScore);
+        }
+    }
+    console.log("Best Score", bestScore);
+
+    compPoem = compPoems[best];
+
     opponentX = -30;
     poemIndex = 0;
     stateLoaded = true;
@@ -449,12 +471,12 @@ function readState() {
         player.x = playerX;
         opponent.x = opponentX;
         
-    } else if (poemIndex < poem.length) {
+    } else if (poemIndex < dispPoem.length) {
         if (!unfolded) {
             player.play({key: 'unfold'});
             unfolded = true;
         }
-        drawPoem(poem);
+        drawPoem(dispPoem);
     } else if (!loadedNext) {
         next = document.createElement('button');
         next.id = "next";
@@ -526,6 +548,12 @@ function loadWinState() {
     princess.x = 1310;
     promptText.x = 1300;
     turret.x = 1000;
+
+    round++;
+    console.log("Round:", round);
+    if (round % 2 == 0 && difficulty < 4) {
+        difficulty++;
+    }
 
     next = document.createElement('button');
     next.id = "win";
