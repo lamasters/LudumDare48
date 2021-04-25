@@ -351,7 +351,7 @@ function create() {
 
     promptText = this.add.text(700, 90, '', {font: '22px Helvetica', fill: "#ffffff"});
     poemText = this.add.text(430, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
-    scoreText = this.add.text(3, 685, '', {font: '24px Helvetica', fill: '#ffffff'});
+    scoreText = this.add.text(10, 685, '', {font: '24px Helvetica', fill: '#ffffff'});
 }
 
 function update() {
