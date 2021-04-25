@@ -53,11 +53,23 @@ var stateLoaded = false;
 
 var textInput;
 var submit;
+var poemTitle;
 var loadedNext = false;
 var next;
 var done;
 
+var death;
+var win;
+
+var princessX;
+
+var difficulty;
+
 function preload() {
+    this.load.image('scene', 'src/assets/scene.png');
+    this.load.image('death', 'src/assets/death.png');
+    this.load.image('win', 'src/assets/win.png');
+    this.load.spritesheet('princess', 'src/assets/princess_sprite.png', {frameWidth: 120, frameHeight: 200});
 }
 
 function create() {
@@ -70,9 +82,22 @@ function create() {
     - Death State OR Win State ->
     */
 
-    promptText = this.add.text(32, 32, '', {font: '16px Helvetica', fill: "#ffffff"});
-    poemText = this.add.text(32, 64, '', {font: '16px Helvetica', fill: '#ffffff'});
-    scoreText = this.add.text(3, 685, '', {font: '24px Helvetica', fill: '#ffffff'})
+    scene = this.add.image(0, 0, 'scene').setOrigin(0, 0);
+    death = this.add.image(1280, 0, 'death').setOrigin(0, 0);
+    win = this.add.image(1280, 0, 'win').setOrigin(0, 0);
+
+    this.anims.create({
+        key: 'princess',
+        frames: this.anims.generateFrameNumbers('princess'),
+        frameRate: 10,
+        repeat: 2
+    });
+
+    princess = this.add.sprite(1310, 325, 'princess').setScale(0.5);
+
+    promptText = this.add.text(700, 90, '', {font: '22px Helvetica', fill: "#ffffff"});
+    poemText = this.add.text(425, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
+    scoreText = this.add.text(3, 685, '', {font: '24px Helvetica', fill: '#ffffff'});
 }
 
 function update() {
@@ -121,23 +146,41 @@ function generatePoem() {
     
     let nounIdx = Math.round(Math.random() * (nouns.length - 1));
     let noun = nouns[nounIdx];
+    
+    sentence = sentence + noun + ".";
+    
+    let firstLength = sentence.length;
 
-    sentence = sentence + noun + ". We will be a" + generateAdjectives(2);
+    sentence = sentence + "\nWe will be a" + generateAdjectives(3);
 
     rhymesIdx = Math.round(Math.random() * (rhymes[nounIdx].length - 1));
     noun = rhymes[nounIdx][rhymesIdx];
     sentence = sentence + noun + '.';
+
+    let lengthDif = Math.round(Math.max(0, sentence.length - firstLength * 2) / 2);
+    for (let i = 0; i < lengthDif; i++) {
+        sentence = ' ' + sentence;
+    }
 
     return sentence;
 }
 
 function generatePrompt() {
     let sentence = "I want a" + 
-    generateAdjectives(3) + "life. Thus I seek a" + generateAdjectives(3);
+    generateAdjectives(3) + "life."
+
+    let firstLength = sentence.length;
+
+    sentence = sentence + "\nThus I seek a" + generateAdjectives(3);
     nounIdx = Math.round(Math.random() * (rhymes[227].length - 1));
 
     noun = rhymes[227][nounIdx];
     sentence = sentence + noun + '.';
+
+    let lengthDif = Math.round(Math.max(0, sentence.length - firstLength * 2) / 2);
+    for (let i = 0; i < lengthDif; i++) {
+        sentence = ' ' + sentence;
+    }
 
     return sentence;
 }
@@ -173,15 +216,27 @@ function drawPoem(poem) {
 function loadPromptState() {
     scoreText.x = 10;
     scoreText.y = 685;
+    death.x = 1300;
+    win.x = 1300;
+    poemText.x = 425;
+    promptText.x = 700;
+
     scoreText.setFontSize(24);
     poemPrompt = generatePrompt();
     poemText.text = "";
     promptText.text = "";
     stateLoaded = true;
+    princessX = 1280;
+    princess.play({key: 'princess', repeat: 2});
 }
 
 function promptState() {
-    if (promptIndex < poemPrompt.length) {
+    if (princessX > 1050) {
+        princessX -= 1;
+        princess.x = princessX;
+        
+    }
+    else if (promptIndex < poemPrompt.length) {
         drawPrompt();
     } else {
         promptIndex = 0;
@@ -195,6 +250,17 @@ function getPoem() {
     if (poem.length > 0) {
         document.body.removeChild(textInput);
         document.body.removeChild(submit);
+        document.body.removeChild(poemTitle);
+
+        for (let i = 1; i <= 5; i++) {
+            if (poem.length > i * 40) {
+                if (poem [i * 40] == ' ') {
+                    poem = poem.substr(0, i * 40) + '\n' + poem.substr(i * 40);
+                } else {
+                    poem = poem.substr(0, i * 40) + '-\n' + poem.substr(i * 40);
+                }
+            }
+        }
         
         state = 2;
         stateLoaded = false;
@@ -211,8 +277,13 @@ function loadWriteState() {
     submit.innerText = "submit";
     submit.onclick = getPoem;
 
+    poemTitle = document.createElement('h3');
+    poemTitle.id = "poem-title";
+    poemTitle.innerText = "Write your poem here"
+
     document.body.appendChild(textInput);
     document.body.appendChild(submit);
+    document.body.appendChild(poemTitle);
     stateLoaded = true;
 }
 
@@ -279,11 +350,9 @@ function scoreState() {
     let compPoints = compareScore(compScore, promptScore);
 
     if (userPoints > compPoints) {
-        console.log("USER WON")
         totalPoints += userPoints;
         state = 6;
     } else {
-        console.log("COMP WON")
         state = 5;
         stateLoaded = false;
     }
@@ -292,13 +361,19 @@ function scoreState() {
 function restart() {
     state = 0;
     stateLoaded = false;
+    totalScore = 0;
 
     document.body.removeChild(done);
 }
 
 function loadLoseState() {
+    death.x = 0;
+    poemText.x = 1300;
+    princess.x = 1300;
+    promptText.x = 1300;
+
     scoreText.x = 550;
-    scoreText.y = 330;
+    scoreText.y = 575;
     scoreText.setFontSize(50);
 
     done = document.createElement('button');
@@ -318,8 +393,13 @@ function nextRound() {
 }
 
 function loadWinState() {
+    win.x = 0;
+    poemText.x = 1300;
+    princess.x = 1300;
+    promptText.x = 1300;
+
     next = document.createElement('button');
-    next.id = "retry";
+    next.id = "win";
     next.innerText = "next";
     next.onclick = nextRound;
 

@@ -34,38 +34,100 @@ canvas {
     font-family: 'Poppins', sans-serif;
 }
 
+#poem-title {
+    position: absolute;
+    z-index: 0;
+    width: 300px;
+    height: 25px;
+    left: calc(50% - 465px);
+    top: calc(50% - 360px);
+    color: #000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+}
+
 #poem-area {
     position: absolute;
     z-index: 0;
-    width: 720px;
+    width: 500px;
     height: 25px;
-    left: calc(50% - 360px);
-    top: calc(50% - 50px);
+    left: calc(50% - 600px);
+    top: calc(50% - 300px);
+    background-color: #e0b47e;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    border-width: 3px;
+    border-color: #000;
+    outline: none;
+    color: #000;
 }
 
 #poem-submit {
     position: absolute;
     z-index: 0;
-    width: 56px;
-    height: 25px;
-    left: calc(50% - 360px);
-    top: 50%;
+    width: 75px;
+    height: 40px;
+    left: calc(50% - 380px);
+    top: calc(50% - 250px);
+    background-color: #e0b47e;
+    color: #000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    border-width: 3px;
+    border-color: #000;
+    border-radius: 5px;
 }
 
 #next {
     position: absolute;
     z-index: 0;
-    width: 50px;
-    height: 25px;
-    left: calc(50% + 575px);
-    top: calc(50% + 295px);
+    width: 75px;
+    height: 40px;
+    left: calc(50% - 475px);
+    top: calc(50% - 300px);
+    background-color: #e0b47e;
+    color: #000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    border-width: 3px;
+    border-color: #000;
+    border-radius: 5px;
 }
 
 #retry {
     position: absolute;
     z-index: 0;
-    width: 50px;
-    height: 25px;
-    left: calc(50% - 25px);
+    width: 75px;
+    height: 40px;
+    left: calc(50% - 35px);
     top: calc(50% + 100px);
+    background-color: #e0b47e;
+    color: #000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    border-width: 3px;
+    border-color: #000;
+    border-radius: 5px;
+}
+
+#win {
+    position: absolute;
+    z-index: 0;
+    width: 75px;
+    height: 40px;
+    left: calc(50% - 35px);
+    top: calc(50% + 200px);
+    background-color: #e0b47e;
+    color: #000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    border-width: 3px;
+    border-color: #000;
+    border-radius: 5px;
 }
