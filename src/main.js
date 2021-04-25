@@ -262,6 +262,7 @@ function preload() {
     this.load.image('win', 'src/assets/win.png');
     this.load.spritesheet('princess', 'src/assets/princess_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('opponent', 'src/assets/opponent_sprite.png', {frameWidth: 120, frameHeight: 200});
+    this.load.spritesheet('opponent_rev', 'src/assets/opponent_sprite_rev.png', {frameWidth: 120, frameHeight: 200});
 }
 
 function create() {
@@ -291,6 +292,13 @@ function create() {
         frameRate: 10,
         repeat: 3
     });
+
+    this.anims.create({
+        key: 'opponent_rev',
+        frames: this.anims.generateFrameNumbers('opponent_rev'),
+        frameRate: 10,
+        repeat: 3
+    })
 
     princess = this.add.sprite(1310, 325, 'princess').setScale(0.5);
     opponent = this.add.sprite(-30, 600, 'opponent').setScale(0.5);
@@ -531,10 +539,16 @@ function loadReadState() {
     poemText.text = "";
     loadedNext = false;
     stateLoaded = true;
+
+    opponent.play({key: 'opponent_rev'});
 }
 
 function readState() {
-    if (poemIndex < poem.length) {
+    if (opponentX > -30) {
+        opponentX -= 1.3;
+        opponent.x = opponentX;
+        
+    } else if (poemIndex < poem.length) {
         drawPoem(poem);
     } else if (!loadedNext) {
         next = document.createElement('button');
