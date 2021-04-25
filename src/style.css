@@ -60,6 +60,7 @@ canvas {
     font-size: 16px;
     border-width: 3px;
     border-color: #000;
+    border-radius: 10px;
     outline: none;
     color: #000;
 }
@@ -78,7 +79,7 @@ canvas {
     font-size: 18px;
     border-width: 3px;
     border-color: #000;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 #next {
@@ -95,7 +96,7 @@ canvas {
     font-size: 18px;
     border-width: 3px;
     border-color: #000;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 #retry {
@@ -112,7 +113,7 @@ canvas {
     font-size: 18px;
     border-width: 3px;
     border-color: #000;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 #win {
@@ -129,5 +130,5 @@ canvas {
     font-size: 18px;
     border-width: 3px;
     border-color: #000;
-    border-radius: 5px;
+    border-radius: 10px;
 }
