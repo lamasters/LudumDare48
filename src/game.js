@@ -94,6 +94,7 @@ function preload() {
     this.load.audio('low_blip', ['src/assets/low_blip.wav']);
     this.load.audio('win_sfx', ['src/assets/win.wav']);
     this.load.audio('lose_sfx', ['src/assets/lose.wav']);
+    this.load.audio('music', ['src/assets/background_music.mp3']);
 }
 
 function create() {
@@ -106,10 +107,12 @@ function create() {
     - Death State OR Win State ->
     */
 
-    win_sfx = this.sound.add('win_sfx', {loop: false, volume: 0.5});
-    lose_sfx = this.sound.add('lose_sfx', {loop: false, volume: 0.5});
-    high_blip = this.sound.add('high_blip', {loop: false, volume: 0.2});
-    low_blip = this.sound.add('low_blip', {loop: false, volume: 0.2});
+    win_sfx = this.sound.add('win_sfx', {loop: false, volume: 0.3});
+    lose_sfx = this.sound.add('lose_sfx', {loop: false, volume: 0.3});
+    high_blip = this.sound.add('high_blip', {loop: false, volume: 0.05});
+    low_blip = this.sound.add('low_blip', {loop: false, volume: 0.05});
+    let music = this.sound.add('music', {loop: true, volume: 0.5});
+    music.play();
 
     scene = this.add.image(0, 0, 'scene').setOrigin(0, 0);
     death = this.add.image(1280, 0, 'death').setOrigin(0, 0);
