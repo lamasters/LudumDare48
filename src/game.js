@@ -57,6 +57,7 @@ var poemTitle;
 var loadedNext = false;
 var next;
 var done;
+var startGame;
 
 var death;
 var win;
@@ -77,6 +78,7 @@ var high_blip;
 var low_blip;
 
 var difficulty;
+var started = false;
 
 function preload() {
     this.load.image('scene', 'src/assets/scene.png');
@@ -167,24 +169,43 @@ function create() {
 
 function update() {
     scoreText.text = "Score: " + String(Math.round(totalPoints));
-    if (state == 0) {
-        if (!stateLoaded) loadPromptState();
-        promptState();
-    } else if (state == 1) {
-        if (!stateLoaded) loadWriteState();
-    } else if (state == 2) {
-        if (!stateLoaded) loadCompState();
-        compState();
-    } else if (state == 3) {
-        if (!stateLoaded) loadReadState();
-        readState();
-    } else if (state == 4) {
-        scoreState();
-    } else if (state == 5) {
-        if (!stateLoaded) loadLoseState();
-    } else if (state == 6) {
-        if (!stateLoaded) loadWinState();
+    if (started) {
+        if (state == 0) {
+            if (!stateLoaded) loadPromptState();
+            promptState();
+        } else if (state == 1) {
+            if (!stateLoaded) loadWriteState();
+        } else if (state == 2) {
+            if (!stateLoaded) loadCompState();
+            compState();
+        } else if (state == 3) {
+            if (!stateLoaded) loadReadState();
+            readState();
+        } else if (state == 4) {
+            scoreState();
+        } else if (state == 5) {
+            if (!stateLoaded) loadLoseState();
+        } else if (state == 6) {
+            if (!stateLoaded) loadWinState();
+        }
+    } else {
+        if(!stateLoaded) loadStart();
     }
+}
+
+function start() {
+    started = true;
+    document.body.removeChild(startGame)
+    stateLoaded = false;
+}
+
+function loadStart() {
+    startGame = document.createElement('button');
+    startGame.id = "retry";
+    startGame.innerText = "start";
+    startGame.onclick = start;
+    stateLoaded = true;
+    document.body.appendChild(startGame);
 }
 
 function generateAdjectives(num) {
