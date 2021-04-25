@@ -71,6 +71,11 @@ var princess;
 var opponent;
 var player;
 
+var win_sfx;
+var lose_sfx;
+var high_blip;
+var low_blip;
+
 var difficulty;
 
 function preload() {
@@ -78,11 +83,17 @@ function preload() {
     this.load.image('turret', 'src/assets/turrets.png');
     this.load.image('death', 'src/assets/death.png');
     this.load.image('win', 'src/assets/win.png');
+
     this.load.spritesheet('princess', 'src/assets/princess_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('opponent', 'src/assets/opponent_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('opponent_rev', 'src/assets/opponent_sprite_rev.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('roll', 'src/assets/roll_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('unfold', 'src/assets/unfold_sprite.png', {frameWidth: 120, frameHeight: 200});
+
+    this.load.audio('high_blip', ['src/assets/high_blip.wav']);
+    this.load.audio('low_blip', ['src/assets/low_blip.wav']);
+    this.load.audio('win_sfx', ['src/assets/win.wav']);
+    this.load.audio('lose_sfx', ['src/assets/lose.wav']);
 }
 
 function create() {
@@ -94,6 +105,11 @@ function create() {
     - Judgement state             ^
     - Death State OR Win State ->
     */
+
+    win_sfx = this.sound.add('win_sfx', {loop: false, volume: 0.5});
+    lose_sfx = this.sound.add('lose_sfx', {loop: false, volume: 0.5});
+    high_blip = this.sound.add('high_blip', {loop: false, volume: 0.2});
+    low_blip = this.sound.add('low_blip', {loop: false, volume: 0.2});
 
     scene = this.add.image(0, 0, 'scene').setOrigin(0, 0);
     death = this.add.image(1280, 0, 'death').setOrigin(0, 0);
@@ -250,11 +266,27 @@ function compareScore(score1, score2)  {
 }
 
 function drawPrompt() {
+    if (promptIndex % 4 == 0) {
+        if (sentiment.analyze(poemPrompt).score > 0) {
+            high_blip.play();
+        } else {
+            low_blip.play();
+        }
+    }
+
     promptText.text = promptText.text.concat(poemPrompt[promptIndex]);
     promptIndex++;
 }
 
 function drawPoem(poem) {
+    if (poemIndex % 4 == 0) {
+        if (sentiment.analyze(poem).score > 0) {
+            high_blip.play();
+        } else {
+            low_blip.play();
+        }
+    }
+
     poemText.text = poemText.text.concat(poem[poemIndex]);
     poemIndex++;
 }
@@ -454,6 +486,8 @@ function loadLoseState() {
     document.body.appendChild(done);
 
     stateLoaded = true;
+
+    lose_sfx.play();
 }
 
 function nextRound() {
@@ -476,4 +510,6 @@ function loadWinState() {
 
     document.body.appendChild(next);
     stateLoaded = true;
+
+    win_sfx.play();
 }
