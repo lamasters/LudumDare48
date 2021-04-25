@@ -114,7 +114,7 @@ function create() {
     })
 
     princess = this.add.sprite(1310, 325, 'princess').setScale(0.5);
-    opponent = this.add.sprite(-30, 600, 'opponent').setScale(0.5);
+    opponent = this.add.sprite(-30, 605, 'opponent').setScale(0.5);
 
     promptText = this.add.text(700, 90, '', {font: '22px Helvetica', fill: "#ffffff"});
     poemText = this.add.text(430, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
