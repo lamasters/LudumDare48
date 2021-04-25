@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 generate-rhymes.js
 princess_frames
+opponent_frames

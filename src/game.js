@@ -62,6 +62,10 @@ var death;
 var win;
 
 var princessX;
+var opponentX;
+
+var princess;
+var opponent;
 
 var difficulty;
 
@@ -70,6 +74,7 @@ function preload() {
     this.load.image('death', 'src/assets/death.png');
     this.load.image('win', 'src/assets/win.png');
     this.load.spritesheet('princess', 'src/assets/princess_sprite.png', {frameWidth: 120, frameHeight: 200});
+    this.load.spritesheet('opponent', 'src/assets/opponent_sprite.png', {frameWidth: 120, frameHeight: 200});
 }
 
 function create() {
@@ -93,10 +98,18 @@ function create() {
         repeat: 2
     });
 
+    this.anims.create({
+        key: 'opponent',
+        frames: this.anims.generateFrameNumbers('opponent'),
+        frameRate: 10,
+        repeat: 3
+    });
+
     princess = this.add.sprite(1310, 325, 'princess').setScale(0.5);
+    opponent = this.add.sprite(-30, 600, 'opponent').setScale(0.5);
 
     promptText = this.add.text(700, 90, '', {font: '22px Helvetica', fill: "#ffffff"});
-    poemText = this.add.text(425, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
+    poemText = this.add.text(430, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
     scoreText = this.add.text(3, 685, '', {font: '24px Helvetica', fill: '#ffffff'});
 }
 
@@ -218,7 +231,7 @@ function loadPromptState() {
     scoreText.y = 685;
     death.x = 1300;
     win.x = 1300;
-    poemText.x = 425;
+    poemText.x = 430;
     promptText.x = 700;
 
     scoreText.setFontSize(24);
@@ -227,7 +240,7 @@ function loadPromptState() {
     promptText.text = "";
     stateLoaded = true;
     princessX = 1280;
-    princess.play({key: 'princess', repeat: 2});
+    princess.play({key: 'princess'});
 }
 
 function promptState() {
@@ -235,8 +248,7 @@ function promptState() {
         princessX -= 1;
         princess.x = princessX;
         
-    }
-    else if (promptIndex < poemPrompt.length) {
+    } else if (promptIndex < poemPrompt.length) {
         drawPrompt();
     } else {
         promptIndex = 0;
@@ -295,13 +307,20 @@ function compDone() {
 
 function loadCompState() {
     compPoem = generatePoem();
+    opponentX = -30;
     poemIndex = 0;
     stateLoaded = true;
     loadedNext = false;
+
+    opponent.play({key: 'opponent'});
 }
 
 function compState() {
-    if (poemIndex < compPoem.length) {
+    if (opponentX < 400) {
+        opponentX += 1.3;
+        opponent.x = opponentX;
+        
+    } else if (poemIndex < compPoem.length) {
         drawPoem(compPoem);
     } else if (!loadedNext) {
         next = document.createElement('button');
