@@ -250,9 +250,13 @@ var win;
 
 var princessX;
 var opponentX;
+var playerX;
+var unfolded = false;
 
+var turret;
 var princess;
 var opponent;
+var player;
 
 var difficulty;
 
@@ -264,6 +268,8 @@ function preload() {
     this.load.spritesheet('princess', 'src/assets/princess_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('opponent', 'src/assets/opponent_sprite.png', {frameWidth: 120, frameHeight: 200});
     this.load.spritesheet('opponent_rev', 'src/assets/opponent_sprite_rev.png', {frameWidth: 120, frameHeight: 200});
+    this.load.spritesheet('roll', 'src/assets/roll_sprite.png', {frameWidth: 120, frameHeight: 200});
+    this.load.spritesheet('unfold', 'src/assets/unfold_sprite.png', {frameWidth: 120, frameHeight: 200});
 }
 
 function create() {
@@ -283,28 +289,44 @@ function create() {
     this.anims.create({
         key: 'princess',
         frames: this.anims.generateFrameNumbers('princess'),
-        frameRate: 10,
+        frameRate: 20,
         repeat: 2
     });
 
     this.anims.create({
         key: 'opponent',
         frames: this.anims.generateFrameNumbers('opponent'),
-        frameRate: 10,
+        frameRate: 20,
         repeat: 3
     });
 
     this.anims.create({
         key: 'opponent_rev',
         frames: this.anims.generateFrameNumbers('opponent_rev'),
-        frameRate: 10,
+        frameRate: 20,
         repeat: 3
-    })
+    });
+
+    this.anims.create({
+        key: 'roll',
+        frames: this.anims.generateFrameNumbers('roll'),
+        frameRate: 20,
+        repeat: 4.5
+    });
+
+    this.anims.create({
+        key: 'unfold',
+        frames: this.anims.generateFrameNumbers('unfold'),
+        frameRate: 20,
+        repeat: 0
+    });
+
 
     princess = this.add.sprite(1310, 325, 'princess').setScale(0.5);
     opponent = this.add.sprite(-30, 605, 'opponent').setScale(0.5);
+    player = this.add.sprite(-30, 605, 'roll').setScale(0.5);
 
-    this.add.image(0, 0, 'turret').setOrigin(0, 0,);
+    turret = this.add.image(0, 0, 'turret').setOrigin(0, 0,);
 
     promptText = this.add.text(700, 90, '', {font: '22px Helvetica', fill: "#ffffff"});
     poemText = this.add.text(430, 500, '', {font: '22px Helvetica', fill: '#ffffff'});
@@ -431,6 +453,7 @@ function loadPromptState() {
     win.x = 1300;
     poemText.x = 430;
     promptText.x = 700;
+    turret.x = 0;
 
     scoreText.setFontSize(24);
     poemPrompt = generatePrompt();
@@ -443,7 +466,7 @@ function loadPromptState() {
 
 function promptState() {
     if (princessX > 1025) {
-        princessX -= 1;
+        princessX -= 2;
         princess.x = princessX;
         
     } else if (promptIndex < poemPrompt.length) {
@@ -464,7 +487,7 @@ function getPoem() {
 
         for (let i = 1; i <= 5; i++) {
             if (poem.length > i * 40) {
-                if (poem [i * 40] == ' ') {
+                if (poem [i * 40 - 1] == ' ') {
                     poem = poem.substr(0, i * 40) + '\n' + poem.substr(i * 40);
                 } else {
                     poem = poem.substr(0, i * 40) + '-\n' + poem.substr(i * 40);
@@ -515,7 +538,7 @@ function loadCompState() {
 
 function compState() {
     if (opponentX < 400) {
-        opponentX += 1.3;
+        opponentX += 2.6;
         opponent.x = opponentX;
         
     } else if (poemIndex < compPoem.length) {
@@ -535,6 +558,7 @@ function readDone() {
     document.body.removeChild(next);
     state = 4;
     stateLoaded = false;
+    player.x = -30;
 }
 
 function loadReadState() {
@@ -542,16 +566,25 @@ function loadReadState() {
     poemText.text = "";
     loadedNext = false;
     stateLoaded = true;
-
+    
+    unfolded = false;
+    playerX = -30;
     opponent.play({key: 'opponent_rev'});
+    player.play({key: 'roll'});
 }
 
 function readState() {
     if (opponentX > -30) {
-        opponentX -= 1.3;
+        opponentX -= 2.8;
+        playerX += 2.6;
+        player.x = playerX;
         opponent.x = opponentX;
         
     } else if (poemIndex < poem.length) {
+        if (!unfolded) {
+            player.play({key: 'unfold'});
+            unfolded = true;
+        }
         drawPoem(poem);
     } else if (!loadedNext) {
         next = document.createElement('button');
@@ -592,8 +625,9 @@ function restart() {
 function loadLoseState() {
     death.x = 0;
     poemText.x = 1300;
-    princess.x = 1300;
+    princess.x = 1310;
     promptText.x = 1300;
+    turret.x = 1000;
 
     scoreText.x = 550;
     scoreText.y = 575;
@@ -618,8 +652,9 @@ function nextRound() {
 function loadWinState() {
     win.x = 0;
     poemText.x = 1300;
-    princess.x = 1300;
+    princess.x = 1310;
     promptText.x = 1300;
+    turret.x = 1000;
 
     next = document.createElement('button');
     next.id = "win";
